@@ -23,6 +23,20 @@ func TestFoo(t *testing.T) {
 	//
 }
 
+func BenchmarkGray_webp_q00(b *testing.B) {
+	m := tToGray(tLoadImage("../testdata/lena512color.png"))
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		err := webp.Encode(ioutil.Discard, m, &webp.Options{
+			Lossless: false,
+			Quality:  0,
+		})
+		if err != nil {
+			b.Fatal(err)
+		}
+	}
+}
+
 func BenchmarkGray_webp_q75(b *testing.B) {
 	m := tToGray(tLoadImage("../testdata/lena512color.png"))
 	b.ResetTimer()
@@ -57,6 +71,20 @@ func BenchmarkGray_webp_lossless(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		err := webp.Encode(ioutil.Discard, m, &webp.Options{
 			Lossless: true,
+			Quality:  0,
+		})
+		if err != nil {
+			b.Fatal(err)
+		}
+	}
+}
+
+func BenchmarkRGBA_webp_q00(b *testing.B) {
+	m := tToRGBA(tLoadImage("../testdata/lena512color.png"))
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		err := webp.Encode(ioutil.Discard, m, &webp.Options{
+			Lossless: false,
 			Quality:  0,
 		})
 		if err != nil {
